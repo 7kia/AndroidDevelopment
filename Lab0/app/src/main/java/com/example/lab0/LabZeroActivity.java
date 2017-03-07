@@ -19,22 +19,29 @@ public class LabZeroActivity extends AppCompatActivity {
         Button btn = (Button) findViewById(R.id.button);
 
         btn.setOnClickListener(onClickListener);
+
+        SetTextViewState(m_isOldText);
     }
+
+    public void SetTextViewState(boolean value)
+    {
+        m_isOldText = value;
+        if(m_isOldText)
+        {
+            m_nameTextView.setText(R.string.textView_1_true);
+        }
+        else
+        {
+            m_nameTextView.setText(R.string.textView_1_false);
+        }
+    }
+
 
     private final View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v)
         {
-            if(m_isOldText)
-            {
-                m_nameTextView.setText("Колчин Илья Андреевич");
-                m_isOldText = false;
-            }
-            else
-            {
-                m_nameTextView.setText("Hello World!");
-                m_isOldText = true;
-            }
+            SetTextViewState(!m_isOldText);
         }
     };
 }
