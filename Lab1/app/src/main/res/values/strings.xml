@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Список задач</string>
+    <string name="date">date</string>
+    <string name="fileName">tasks</string>
+    <string name="delimiter">◘</string>
+    <string name="rewrite">rewrite</string>
+    <string name="header">header</string>
+    <string name="isChange">isChange</string>
+    <string name="desc">desc</string>
+    <string name="time">time</string>
+    <string name="importance">importance</string>
+    <string name="number">number</string>
+    <string name="menu_update">Изменить</string>
+    <string name="menu_delete">Удалить</string>
+    <string name="menu_complete">Выполнено</string>
+    <string name="format">dd-MM-yyyy</string>
+</resources>
+

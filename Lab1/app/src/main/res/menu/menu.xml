@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/select_all_settings"
+        android:orderInCategory="1"
+        android:title="Выделить всё" />
+    <item
+        android:id="@+id/remove_all_settings"
+        android:orderInCategory="3"
+        android:title="Снять все выделения" />
+    <item
+        android:id="@+id/delete_all_settings"
+        android:orderInCategory="2"
+        android:title="Удалить выделенные задачи" />
+    <item
+        android:id="@+id/as_complete"
+        android:orderInCategory="2"
+        android:title="Отметить как выполненные" />
+</menu>

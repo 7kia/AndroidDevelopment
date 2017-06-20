@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <TextView
+                android:text="Новая задача"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/newTask"
+                style="+@style/CustomText"
+                android:textStyle="normal|bold"
+                android:textSize="18sp" />
+
+            <TextView
+                android:text="Заголовок"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:id="@+id/textView4"
+                android:layout_marginLeft="17dp"
+                android:layout_marginStart="17dp"
+                android:layout_below="@+id/newTask"
+                android:layout_alignLeft="@+id/newTask"
+                android:layout_alignStart="@+id/newTask" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/headerText"
+                android:layout_marginTop="11dp"
+                android:layout_below="@+id/textView4"
+                android:layout_alignLeft="@+id/newTask"
+                android:layout_alignStart="@+id/newTask"
+                android:layout_alignRight="@+id/ready"
+                android:layout_alignEnd="@+id/ready"
+                android:background="@drawable/border"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="time"
+                android:ems="10"
+                android:layout_alignTop="@+id/spinner"
+                android:layout_marginLeft="19dp"
+                android:id="@+id/time"
+                android:background="@drawable/border"
+                android:layout_above="@+id/imageView4"
+                android:layout_alignEnd="@+id/description" />
+
+            <Spinner
+                android:layout_width="300px"
+                android:layout_height="80px"
+                android:id="@+id/spinner"
+                android:background="@drawable/border"
+                android:textColor="#000fff"
+                android:layout_below="@+id/textView6"
+                android:layout_alignStart="@+id/description" />
+
+            <CheckBox
+                android:text="  Важность"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioImportance"
+                android:layout_below="@+id/time"
+                android:layout_alignStart="@+id/headerText"
+                android:layout_marginTop="13dp" />
+
+            <TextView
+                android:text="Описание"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                android:layout_below="@+id/headerText"
+                android:layout_alignStart="@+id/textView4" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/description"
+                android:background="@drawable/border"
+                android:layout_below="@+id/textView5"
+                android:layout_alignStart="@+id/headerText"
+                android:layout_alignEnd="@+id/headerText" />
+
+            <TextView
+                android:text="Сроки"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView6"
+                android:layout_marginTop="18dp"
+                android:layout_below="@+id/description"
+                android:layout_alignStart="@+id/textView5" />
+
+            <Button
+                android:text="Отменить"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cancel"
+                android:onClick="onClick (AddTaskActivity)"
+                android:layout_below="@+id/radioImportance"
+                android:layout_alignStart="@+id/radioImportance" />
+
+            <Button
+                android:text="Готово"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ready"
+                android:layout_marginEnd="14dp"
+                android:onClick="onClick (AddTaskActivity)"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
