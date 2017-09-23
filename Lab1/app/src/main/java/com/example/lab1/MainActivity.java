@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(this.getString(R.string.importance), selectedTask.getImportance());
                     intent.putExtra(this.getString(R.string.isChange), true);
                     intent.putExtra(this.getString(R.string.number), acmi.position);
+
                     startActivity(intent);
                 }
                 break;

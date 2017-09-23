@@ -69,8 +69,7 @@ public class FileManager {
                     );
                     if (isImportance && !isComplete) {
                         importanceTasks.add(newTask);
-                    }
-                    else if(isComplete){
+                    } else if(isComplete){
                         completedTasks.add(newTask);
                     } else{
                         otherTasks.add(newTask);
@@ -79,6 +78,7 @@ public class FileManager {
             }
             SortList(importanceTasks);
             SortList(otherTasks);
+            SortList(completedTasks);
             mTasks.addAll(importanceTasks);
             mTasks.addAll(otherTasks);
             mTasks.addAll(completedTasks);

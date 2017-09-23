@@ -121,6 +121,7 @@ public class AddTaskActivity extends Activity implements View.OnClickListener {
                 newTask.putExtra(this.getString(R.string.importance), mImportance.isChecked());
 
                 startActivity(newTask);
+                finish();
             }
             case R.id.cancel:
             {
@@ -144,7 +145,7 @@ public class AddTaskActivity extends Activity implements View.OnClickListener {
                 ) {
                     Calendar newDate = Calendar.getInstance();
                     newDate.set(year, monthOfYear, dayOfMonth);
-                    setNewValuesSpinner(newDate.getTime());
+                    setNewVal(mDateFormatter.format(newDate.getTime()));
                 }
             },
             newCalendar.get(Calendar.YEAR),
@@ -168,11 +169,6 @@ public class AddTaskActivity extends Activity implements View.OnClickListener {
             newCalendar.get(Calendar.MINUTE),
             false
         );
-    }
-
-    private void setNewValuesSpinner(Date date)
-    {
-        setNewVal(mDateFormatter.format(date.getTime()));
     }
 
     private void setNewValuesSpinner(String date)

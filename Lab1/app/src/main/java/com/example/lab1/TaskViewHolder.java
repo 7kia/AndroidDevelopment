@@ -12,8 +12,6 @@ public class TaskViewHolder {
     private ImageView mIsComplete;
     private ImageView mImageView;
 
-    public TaskViewHolder() {
-    }
 
     public TaskViewHolder(
           TextView header,

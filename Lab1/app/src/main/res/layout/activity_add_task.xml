@@ -54,24 +54,21 @@
         android:id="@+id/spinner"
         android:background="@drawable/border"
         android:textColor="#000fff"
+        android:layout_marginTop="22dp"
         android:layout_below="@+id/textView6"
-        android:layout_alignLeft="@+id/imageView3"
-        android:layout_alignStart="@+id/imageView3"
-        android:layout_marginTop="18dp" />
+        android:layout_alignStart="@+id/radioImportance" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="time"
         android:ems="10"
-        android:layout_alignTop="@+id/spinner"
-        android:layout_toRightOf="@+id/spinner"
         android:layout_marginLeft="19dp"
-        android:layout_marginStart="19dp"
         android:id="@+id/time"
         android:background="@drawable/border"
-        android:layout_above="@+id/imageView4"
-        android:layout_alignEnd="@+id/description" />
+        android:layout_alignTop="@+id/spinner"
+        android:layout_alignEnd="@+id/description"
+        android:layout_toEndOf="@+id/spinner" />
 
     <TextView
         android:text="Описание"

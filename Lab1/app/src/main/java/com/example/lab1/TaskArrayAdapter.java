@@ -84,10 +84,13 @@ public class TaskArrayAdapter extends ArrayAdapter<Task> {
         if(task.getComplete())
         {
             newCheckBox.setImageResource(R.drawable.task_done_1);
-        } else{
+        }
+        else
+        {
             newCheckBox.setImageResource(R.drawable.task_to_process);
         }
-        if (task.getImportance()) {
+        if (task.getImportance())
+        {
             view.setImageResource(R.drawable.alarm_clock);
         }
 

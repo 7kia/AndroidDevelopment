@@ -15,7 +15,6 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.util.Log;
 import android.util.Xml;
 import android.widget.Toast;
 
@@ -46,9 +45,6 @@ public class MainActivity extends AppCompatActivity{
                 Toast.LENGTH_LONG
         ).show();
 
-        mInputStream = null;
-        mXmlPullParser = null;
-
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
         mRssRecycleView = (RecyclerView) findViewById(R.id.rssRecycleVIew);
 
@@ -65,12 +61,12 @@ public class MainActivity extends AppCompatActivity{
                 mRssRecycleView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
                 mRssRecycleView.clearOnScrollListeners();
 
-                new restartRssFeedTask().execute();
+                new RestartRssFeedTask().execute();
             }
         });
     }
 
-    private class restartRssFeedTask extends AsyncTask<Void , Void, Boolean> {
+    private class RestartRssFeedTask extends AsyncTask<Void , Void, Boolean> {
         protected Boolean doInBackground(Void... params) {
             try{
                 if ( mRssModels != null){
@@ -88,7 +84,6 @@ public class MainActivity extends AppCompatActivity{
                     mXmlPullParser = null;
                 }
                 setOnScrollListener();
-                Log.d("RefreshListener", "User refreshed rss feed");
                 loadData();
                 return true;
             } catch (Exception e){
@@ -137,6 +132,48 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    private class RssLoader extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                if ( mInputStream == null)
+                {
+                    URL url = new URL(getString(R.string.rss_feed_url));
+                    mInputStream = url.openConnection().getInputStream();
+                }
+                if ( mRssModels == null){
+                    mRssModels = getNextNewsFromRssFeed();
+                } else {
+                    mRssModels.addAll(getNextNewsFromRssFeed());
+                }
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mSwipeLayout.setRefreshing(true);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mSwipeLayout.setRefreshing(false);
+
+            if (success) {
+                mRssRecycleView.setAdapter(new MyRecycleViewAdapter( mRssModels));
+            } else {
+                Toast.makeText(MainActivity.this,
+                        R.string.check_connection,
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     public List<RssModel> getNextNewsFromRssFeed() throws XmlPullParserException, IOException {
         if ( mXmlPullParser == null) {
             mXmlPullParser = Xml.newPullParser();
@@ -156,8 +193,6 @@ public class MainActivity extends AppCompatActivity{
         while (currentNewId < SCROOL_SPEED) {
             if ( mXmlPullParser.next() == XmlPullParser.END_DOCUMENT) {
                 mInputStream.close();
-                Log.d("NewsLoader", "Loaded news count: " + items.size());
-                Log.d("NewsLoader", "Reached end of RSS file");
                 return items;
             }
 
@@ -174,11 +209,10 @@ public class MainActivity extends AppCompatActivity{
                 }
                 continue;
             }
-            if (eventType == XmlPullParser.START_TAG) {
-                if (name.equalsIgnoreCase("item")) {
-                    isItem = true;
-                    continue;
-                }
+            if ((eventType == XmlPullParser.START_TAG)
+                    && name.equalsIgnoreCase("item")) {
+                isItem = true;
+                continue;
             }
 
             String result = "";
@@ -211,50 +245,7 @@ public class MainActivity extends AppCompatActivity{
                 isItem = false;
             }
         }
-        Log.d("NewsLoader", "Loaded news count: " + items.size());
         return items;
     }
 
-
-    private class RssLoader extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                if ( mInputStream == null)
-                {
-                    URL url = new URL(getString(R.string.rss_feed_url));
-                    mInputStream = url.openConnection().getInputStream();
-                }
-                if ( mRssModels == null){
-                    mRssModels = getNextNewsFromRssFeed();
-                } else {
-                    mRssModels.addAll(getNextNewsFromRssFeed());
-                }
-                return true;
-            } catch (IOException e) {
-                Log.e("MainActivity", "IO error", e);
-            } catch (XmlPullParserException e) {
-                Log.e("MainActivity", "XML parse error", e);
-            }
-            return false;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mSwipeLayout.setRefreshing(true);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            mSwipeLayout.setRefreshing(false);
-
-            if (success) {
-                mRssRecycleView.setAdapter(new MyRecycleViewAdapter( mRssModels));
-            } else {
-                Toast.makeText(MainActivity.this,
-                        R.string.check_connection,
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 }
