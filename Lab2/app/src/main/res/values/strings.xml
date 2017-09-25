@@ -2,6 +2,7 @@
     <string name="app_name">Lenta.ru rss reader</string>
     <string name="load_rss_button">Load Lenta.ru RSS</string>
     <string name="rss_feed_url">https://lenta.ru/rss/news</string>
+    <string name="feedFileName">feed</string>
     <string name="rss_success">RSS successfully loaded.</string>
     <string name="rss_refresh_error">Error. Lenta.ru RSS are not available now. Try again later.</string>
     <string name="swipe_down">Swipe down to load Lenta.ru RSS feed.</string>
