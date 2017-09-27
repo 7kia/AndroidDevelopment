@@ -1,5 +1,6 @@
 package com.example.lab2;
 
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,17 +8,17 @@ import android.support.v7.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import java.net.URL;
+import android.os.Handler;
+import android.content.Intent;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity{
     private SwipeRefreshLayout mSwipeLayout;
@@ -26,6 +27,9 @@ public class MainActivity extends AppCompatActivity{
 
     private RssManager mRssManager;
 
+    private Timer mTimer;
+    private Handler mRssUpdateHandler;
+    private Intent mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +54,6 @@ public class MainActivity extends AppCompatActivity{
         mRssRecycleView.setLayoutManager( mLinearLayoutManager);
         mRssRecycleView.setAdapter( new MyRecycleViewAdapter(mRssManager.mRssModels) );
 
-
-        //startService(new Intent(this, RssService.class));
         setOnScrollListener();
 
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -63,6 +65,55 @@ public class MainActivity extends AppCompatActivity{
                 new RestartRssFeedTask().execute();
             }
         });
+
+        setupService();
+        setUpdateEvent();
+    }
+
+    private void setupService()
+    {
+        try {
+            mService = new Intent(this, RssService.class);
+            mService.putExtra("pubData", "0");
+            startService(mService);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setUpdateEvent()
+    {
+        mRssUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                mRssRecycleView.setLayoutManager( mLinearLayoutManager);
+                mRssRecycleView.setAdapter( new MyRecycleViewAdapter(mRssManager.mRssModels) );
+                mRssRecycleView.getAdapter().notifyDataSetChanged();
+
+                Toast.makeText(MainActivity.this,
+                        R.string.feed_update,
+                        Toast.LENGTH_LONG).show();
+            }
+        };
+        mTimer = new Timer("timer");
+        mTimer.schedule(
+            new TimerTask() {
+                @Override
+                public void run() {
+                    updateNews();
+                }
+            },
+            1000,
+            10000
+        );
+    }
+
+    public void  updateNews()
+    {
+        mRssUpdateHandler.sendEmptyMessage(0);
     }
 
     private class RestartRssFeedTask extends AsyncTask<Void , Void, Boolean> {
@@ -118,11 +169,33 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    private void updateServiceData()
+    {
+        if(mRssManager.mRssModels == null)
+        {
+            mService.putExtra("pubData", "0");
+        }
+        else if(mRssManager.mRssModels.size() <= 0)
+        {
+            mService.putExtra("pubData", "0");
+        }
+        else
+        {
+            mService.putExtra(
+                    "pubData",
+                    mRssManager
+                            .mRssModels.get(mRssManager.mRssModels.size() - 1)
+                            .mPublicationDate
+            );
+        }
+    }
+
     private class RssLoader extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 mRssManager.loadFeed();
+                updateServiceData();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

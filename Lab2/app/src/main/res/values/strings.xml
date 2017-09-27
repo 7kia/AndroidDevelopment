@@ -6,5 +6,6 @@
     <string name="rss_success">RSS successfully loaded.</string>
     <string name="rss_refresh_error">Error. Lenta.ru RSS are not available now. Try again later.</string>
     <string name="swipe_down">Swipe down to load Lenta.ru RSS feed.</string>
+    <string name="feed_update">Lenta.ru RSS feed update.</string>
     <string name="check_connection">Lenta.ru RSS are not available now. Check your internet connection.</string>
 </resources>
