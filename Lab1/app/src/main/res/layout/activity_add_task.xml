@@ -67,8 +67,8 @@
         android:id="@+id/time"
         android:background="@drawable/border"
         android:layout_alignTop="@+id/spinner"
-        android:layout_alignEnd="@+id/description"
-        android:layout_toEndOf="@+id/spinner" />
+        android:layout_alignEnd="@+id/ready"
+        android:layout_toEndOf="@+id/description" />
 
     <TextView
         android:text="Описание"

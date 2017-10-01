@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView mListViewSimple;
     private ArrayList<Task> mTasks;
-    private ArrayAdapter<Task> mListAdapter ;
+    private ArrayAdapter<Task> mListAdapter;
     private int mNumber;
     private WorkWithTasks mWorkWithTasks;
     private FileManager mFileManager;
