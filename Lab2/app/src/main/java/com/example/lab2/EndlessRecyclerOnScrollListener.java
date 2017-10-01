@@ -12,9 +12,6 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private int mPreviousTotal = 0;
     private boolean mLoading = true;
     private static int VISIBLE_THRESHOLD = 10;
-    private int mFirstVisibleItem;
-    private int mVisibleItemCount;
-    private int mTotalItemCount;
     private int mCurrent_page = 1;
 
     private LinearLayoutManager mLinearLayoutManager;
@@ -27,18 +24,18 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        mVisibleItemCount = recyclerView.getChildCount();
-        mTotalItemCount = mLinearLayoutManager.getItemCount();
-        mFirstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+        int visibleItemCount = recyclerView.getChildCount();
+        int totalItemCount = mLinearLayoutManager.getItemCount();
+        int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
 
         if (mLoading) {
-            if (mTotalItemCount > mPreviousTotal) {
+            if (totalItemCount > mPreviousTotal) {
                 mLoading = false;
-                mPreviousTotal = mTotalItemCount;
+                mPreviousTotal = totalItemCount;
             }
         }
-        if (!mLoading && (mTotalItemCount - mVisibleItemCount)
-                <= (mFirstVisibleItem + VISIBLE_THRESHOLD)) {
+        if (!mLoading && (totalItemCount - visibleItemCount)
+                <= (firstVisibleItem + VISIBLE_THRESHOLD)) {
             mCurrent_page++;
 
             onLoadMore(mCurrent_page);
@@ -48,11 +45,5 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     }
 
     public abstract void onLoadMore(int current_page);
-    public void restartScrollListener(){
-        mPreviousTotal = 0;
-        mLoading = true;
-        mFirstVisibleItem = 0;
-        mVisibleItemCount = 0;
-        mTotalItemCount = 0;
-    }
+
 }

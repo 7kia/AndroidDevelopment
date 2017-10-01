@@ -45,8 +45,7 @@ public class MainActivity extends AppCompatActivity{
         mRssRecycleView = (RecyclerView) findViewById(R.id.rssRecycleVIew);
 
         mRssManager = new RssManager(
-                this.getString(R.string.rss_feed_url),
-                this.getString(R.string.feedFileName)
+                this.getString(R.string.rss_feed_url)
         );
 
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -59,15 +58,21 @@ public class MainActivity extends AppCompatActivity{
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mRssRecycleView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
-                mRssRecycleView.clearOnScrollListeners();
-
-                new RestartRssFeedTask().execute();
+                refreshRssRecycleView();
             }
         });
 
         setupService();
         setUpdateEvent();
+        refreshRssRecycleView();
+    }
+
+    private void refreshRssRecycleView()
+    {
+        mRssRecycleView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
+        mRssRecycleView.clearOnScrollListeners();
+
+        new RestartRssFeedTask().execute();
     }
 
     private void setupService()

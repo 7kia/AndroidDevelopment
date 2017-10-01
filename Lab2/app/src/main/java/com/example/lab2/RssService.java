@@ -6,7 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
+
 import android.os.IBinder;
 import android.widget.Toast;
 import android.support.v4.app.NotificationCompat;
@@ -18,19 +18,9 @@ import java.util.TimerTask;
 public class RssService extends Service{
     private static final int NOTIFICATION_ID = 234;
 
-    private Handler mHandler;
-    private Intent mMainIntent;
-    public String mPathToUrl = "https://lenta.ru/rss/news";
-    public String mPathToSaveFeed = "feed";
-
-    private RssService self = this;
-    private RssManager mRssManager;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        mHandler = new Handler();
-        mRssManager = new RssManager(mPathToUrl, mPathToSaveFeed);
     }
 
     @Override
@@ -38,7 +28,6 @@ public class RssService extends Service{
         if(intent == null) {
             return START_STICKY;
         }
-        mMainIntent = intent;
 
         Timer mTimer = new Timer();
         mTimer.schedule(

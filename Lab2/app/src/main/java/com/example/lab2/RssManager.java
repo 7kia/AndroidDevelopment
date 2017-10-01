@@ -18,16 +18,14 @@ public class RssManager {
     private XmlPullParser mXmlPullParser;
 
     private String mPathToUrl;
-    private String mPathToSaveFeed;
-    private static int SCROOL_SPEED = 10;
 
-    public RssManager(
-            String pathToUrl,
-            String pathToSaveFeed
-    )
+    private static int SCROLL_SPEED = 10;
+    private boolean mFoundItem = false;
+    private RssModel mLastReadModel;
+    public RssManager(String pathToUrl)
     {
         this.mPathToUrl = pathToUrl;
-        this.mPathToSaveFeed = pathToSaveFeed;
+        mLastReadModel = new RssModel();
     }
 
     public void clearFeed() throws IOException
@@ -60,26 +58,25 @@ public class RssManager {
 
 
     private List<RssModel> getNextNewsFromRssFeed() throws XmlPullParserException, IOException {
-
         if ( mXmlPullParser == null) {
             mXmlPullParser = Xml.newPullParser();
             mXmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             mXmlPullParser.setInput( mInputStream, null);
         }
-
         mXmlPullParser.nextTag();
-
         List<RssModel> items = new ArrayList<>();
-        String title = null;
-        String link = null;
-        String pubDate = null;
-        boolean isItem = false;
-        int currentNewId = 0;
+        fillListRssModels(items);
+        return items;
+    }
 
-        while (currentNewId < SCROOL_SPEED) {
+    private void fillListRssModels(List<RssModel> items) throws XmlPullParserException, IOException
+    {
+        int currentNewId = 0;
+        mFoundItem = false;
+        while (currentNewId < SCROLL_SPEED) {
             if ( mXmlPullParser.next() == XmlPullParser.END_DOCUMENT) {
                 mInputStream.close();
-                return items;
+                return;
             }
 
             String name = mXmlPullParser.getName();
@@ -88,49 +85,57 @@ public class RssManager {
                 continue;
             }
 
-            int eventType = mXmlPullParser.getEventType();
-            if (eventType == XmlPullParser.END_TAG) {
-                if (name.equalsIgnoreCase("item")) {
-                    isItem = false;
-                }
+            if(checkEventType(name))
+            {
                 continue;
             }
-            if ((eventType == XmlPullParser.START_TAG)
-                    && name.equalsIgnoreCase("item")) {
-                isItem = true;
-                continue;
-            }
+            searchModelData(name);
 
-            String result = "";
-            if ( mXmlPullParser.next() == XmlPullParser.TEXT) {
-                result = mXmlPullParser.getText();
-                mXmlPullParser.nextTag();
-            }
-
-            if (name.equalsIgnoreCase("title")) {
-                title = result;
-            } else if (name.equalsIgnoreCase("link")) {
-                link = result;
-            } else if (name.equalsIgnoreCase("pubDate")) {
-                pubDate = result;
-            }
-
-            if ((title != null)
-                    && (link != null)
-                    && (pubDate != null)
-                    ) {
-                if (isItem) {
-                    RssModel item = new RssModel(title, link, pubDate);
-                    items.add(item);
-                    currentNewId++;
-                }
-
-                title = null;
-                link = null;
-                pubDate = null;
-                isItem = false;
+            if (mLastReadModel.isFilled() && mFoundItem) {
+                RssModel item = new RssModel(
+                        mLastReadModel.mTitle,
+                        mLastReadModel.mLink,
+                        mLastReadModel.mPublicationDate
+                );
+                items.add(item);
+                currentNewId++;
+                mFoundItem = false;
             }
         }
-        return items;
     }
+
+    private boolean checkEventType(String name) throws XmlPullParserException
+    {
+        int eventType = mXmlPullParser.getEventType();
+        if (eventType == XmlPullParser.END_TAG) {
+            if (name.equalsIgnoreCase("item")) {
+                mFoundItem = false;
+            }
+            return true;
+        }
+        if ((eventType == XmlPullParser.START_TAG)
+                && name.equalsIgnoreCase("item")) {
+            mFoundItem = true;
+            return true;
+        }
+        return false;
+    }
+
+    private void searchModelData(String name) throws XmlPullParserException, IOException
+    {
+        String result = "";
+        if ( mXmlPullParser.next() == XmlPullParser.TEXT) {
+            result = mXmlPullParser.getText();
+            mXmlPullParser.nextTag();
+        }
+
+        if (name.equalsIgnoreCase("title")) {
+            mLastReadModel.mTitle = result;
+        } else if (name.equalsIgnoreCase("link")) {
+            mLastReadModel.mLink = result;
+        } else if (name.equalsIgnoreCase("pubDate")) {
+            mLastReadModel.mPublicationDate = result;
+        }
+    }
+
 }
