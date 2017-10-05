@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity{
 
     private RssManager mRssManager;
 
-    private Timer mTimer;
     private Handler mRssUpdateHandler;
     private Intent mService;
 
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity{
         catch(Exception ex)
         {
             ex.printStackTrace();
+            System.out.println("setupService throw Exception");
         }
     }
 
@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity{
                         Toast.LENGTH_LONG).show();
             }
         };
-        mTimer = new Timer("timer");
-        mTimer.schedule(
+        Timer timer = new Timer("timer");
+        timer.schedule(
             new TimerTask() {
                 @Override
                 public void run() {
@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity{
                 loadData();
                 return true;
             } catch (Exception e){
+                System.out.println("RestartRssFeedTask throw IOException");
                 return false;
             }
         }
@@ -204,8 +205,10 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
+                System.out.println("RssLoader throw IOException");
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
+                System.out.println("RssLoader throw XmlPullParserException");
             }
             return false;
         }

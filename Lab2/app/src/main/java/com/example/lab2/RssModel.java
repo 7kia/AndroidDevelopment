@@ -5,7 +5,6 @@ public class RssModel {
     public String mLink;
     public String mPublicationDate;
 
-
     public RssModel()
     {
 
@@ -20,13 +19,5 @@ public class RssModel {
     public boolean isFilled()
     {
         return (mTitle != null) && (mLink != null) && (mPublicationDate != null);
-    }
-
-    public void clear()
-    {
-        this.mTitle = null;
-        this.mLink = null;
-        this.mPublicationDate = null;
-
     }
 }
