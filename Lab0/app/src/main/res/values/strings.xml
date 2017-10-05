@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Lab0</string>
     <string name="button_1">Replace txt</string>
-    <string name="textView_1_false">Hellow world!</string>
-    <string name="textView_1_true">Колчин Илья Андреевич</string>
+    <string name="hello_world_label_text">Hellow world!</string>
+    <string name="authors_name_label_text">Колчин Илья Андреевич</string>
 </resources>

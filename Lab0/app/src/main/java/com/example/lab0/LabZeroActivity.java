@@ -8,31 +8,29 @@ import android.widget.TextView;
 
 public class LabZeroActivity extends AppCompatActivity {
 
-    private TextView m_nameTextView;
-    private boolean m_isOldText = true;
+    private TextView mNameTextView;
+    private boolean mIsOldText = true;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lab_zero);
-        m_nameTextView = (TextView) findViewById(R.id.textView);
+        mNameTextView = (TextView) findViewById(R.id.textView);
         Button btn = (Button) findViewById(R.id.button);
 
         btn.setOnClickListener(onClickListener);
-
-        SetTextViewState(m_isOldText);
     }
 
-    public void SetTextViewState(boolean value)
+    private void switchTextViewState()
     {
-        m_isOldText = value;
-        if(m_isOldText)
+        mIsOldText = !mIsOldText;
+        if(mIsOldText)
         {
-            m_nameTextView.setText(R.string.textView_1_true);
+            mNameTextView.setText(R.string.authors_name_label_text);
         }
         else
         {
-            m_nameTextView.setText(R.string.textView_1_false);
+            mNameTextView.setText(R.string.hello_world_label_text);
         }
     }
 
@@ -41,7 +39,7 @@ public class LabZeroActivity extends AppCompatActivity {
         @Override
         public void onClick(View v)
         {
-            SetTextViewState(!m_isOldText);
+            switchTextViewState();
         }
     };
 }
