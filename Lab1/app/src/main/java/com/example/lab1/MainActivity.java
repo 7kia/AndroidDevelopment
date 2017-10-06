@@ -13,9 +13,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.lab1.R;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,11 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int CM_DELETE_ID = 2;
     private static final int CM_COMPLETE_ID = 3;
 
-    private ListView mListViewSimple;
+    private ListView mListView;
     private ArrayList<Task> mTasks;
     private ArrayAdapter<Task> mListAdapter;
     private int mNumber;
-    private WorkWithTasks mWorkWithTasks;
     private FileManager mFileManager;
 
 
@@ -36,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mListViewSimple = (ListView) findViewById(R.id.mainListTasks);
+        mListView = (ListView) findViewById(R.id.mainListTasks);
         mTasks = new ArrayList<>();
-        mWorkWithTasks = new WorkWithTasks(mTasks);
         mFileManager = new FileManager(
                 this,
                 mTasks,
@@ -48,43 +46,20 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String fileName = intent.getStringExtra(this.getString(R.string.header));
-        Boolean isChange = intent.getBooleanExtra(this.getString(R.string.isChange), false);
-        Boolean isRewrite = intent.getBooleanExtra(this.getString(R.string.rewrite), false);
-
+        boolean isRewrite = intent.getBooleanExtra(this.getString(R.string.rewrite), false);
         if ((fileName != null) && !isRewrite) {
-            String dateStr = intent.getStringExtra(this.getString(R.string.date));
-            String desc = intent.getStringExtra(this.getString(R.string.desc));
-            String time = intent.getStringExtra(this.getString(R.string.time));
-            Boolean isImportance = intent.getBooleanExtra(this.getString(R.string.importance), true);
-            mNumber = intent.getIntExtra(this.getString(R.string.number), -1);
-
-            if (isChange)
-            {
-                editRecord(
-                        fileName,
-                        dateStr,
-                        time,
-                        desc,
-                        isImportance
-                );
-            }
-            else
-            {
-                mFileManager.writeTasksFromFile(
-                        new Task(
-                                fileName,
-                                dateStr,
-                                time,
-                                desc,
-                                isImportance,
-                                false
-                        )
-                );
-            }
+            updateTasks();
         }
         mFileManager.readTasksFromFile();
 
-        mListViewSimple.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setListView();
+        
+        registerForContextMenu(mListView);
+    }
+
+    private void setListView()
+    {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(
                     AdapterView<?> parent,
@@ -93,16 +68,61 @@ public class MainActivity extends AppCompatActivity {
                     long id
             ) {
                 Task task = mListAdapter.getItem(position);
-                task.toggleChecked();
-                TaskViewHolder viewHolder = (TaskViewHolder) item.getTag();
-                viewHolder.getCheckBox().setChecked(task.isChecked());
+                if(task != null)
+                {
+                    task.toggleChecked();
+                    TaskViewHolder viewHolder = (TaskViewHolder) item.getTag();
+                    viewHolder.getCheckBox().setChecked(task.isChecked());
+                }
+                else
+                {
+                    throw new NullPointerException(
+                            "Task with index = "
+                            + Integer.toString(position)
+                            + " not founded"
+                    );
+                }
             }
         });
 
         mListAdapter = new TaskArrayAdapter(this, mTasks);
-        mListViewSimple.setAdapter(mListAdapter);
-        
-        registerForContextMenu(mListViewSimple);
+        mListView.setAdapter(mListAdapter);
+    }
+
+    private void updateTasks()
+    {
+        Intent intent = getIntent();
+        String dateStr = intent.getStringExtra(this.getString(R.string.date));
+        String desc = intent.getStringExtra(this.getString(R.string.desc));
+        String time = intent.getStringExtra(this.getString(R.string.time));
+        Boolean isImportance = intent.getBooleanExtra(this.getString(R.string.importance), true);
+        mNumber = intent.getIntExtra(this.getString(R.string.number), -1);
+
+        String header = intent.getStringExtra(this.getString(R.string.header));
+        boolean taskIsChanged = intent.getBooleanExtra(this.getString(R.string.taskIsChanged), false);
+        if (taskIsChanged)
+        {
+            editRecord(
+                    header,
+                    dateStr,
+                    time,
+                    desc,
+                    isImportance
+            );
+        }
+        else
+        {
+            mFileManager.writeTasksFromFile(
+                new Task(
+                    header,
+                    dateStr,
+                    time,
+                    desc,
+                    isImportance,
+                    false
+                )
+            );
+        }
     }
 
     private void editRecord(
@@ -126,13 +146,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId())
+        if(v.getId() == R.id.addButton)
         {
-            case R.id.addButton:
-                Intent intent = new Intent(this, AddTaskActivity.class);
-                intent.putExtra(this.getString(R.string.isChange), false);
-                startActivity(intent);
-                break;
+            Intent intent = new Intent(this, AddTaskActivity.class);
+            intent.putExtra(this.getString(R.string.taskIsChanged), false);
+            startActivity(intent);
         }
     }
 
@@ -145,8 +163,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+            ContextMenu menu,
+            View v,
+            ContextMenuInfo menuInfo
+    )
+    {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         menu.add(Menu.NONE, CM_UPDATE_ID, Menu.NONE, this.getString(R.string.menu_update));
@@ -161,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             case CM_DELETE_ID:
                 {
                     mTasks.remove(acmi.position);
-                    mWorkWithTasks.Sort();
+                    sortTasks();
                     mFileManager.rewriteTasksFromFile();
                     mListAdapter.notifyDataSetChanged();
                 }
@@ -170,12 +192,12 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Task selectedTask = mTasks.get(acmi.position);
                     Intent intent = new Intent(this, AddTaskActivity.class);
-                    intent.putExtra(this.getString(R.string.header), selectedTask.getName());
+                    intent.putExtra(this.getString(R.string.header), selectedTask.getHeader());
                     intent.putExtra(this.getString(R.string.desc), selectedTask.getDescription());
                     intent.putExtra(this.getString(R.string.date), selectedTask.getDate());
                     intent.putExtra(this.getString(R.string.time), selectedTask.getTime());
                     intent.putExtra(this.getString(R.string.importance), selectedTask.getImportance());
-                    intent.putExtra(this.getString(R.string.isChange), true);
+                    intent.putExtra(this.getString(R.string.taskIsChanged), true);
                     intent.putExtra(this.getString(R.string.number), acmi.position);
 
                     startActivity(intent);
@@ -183,10 +205,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case CM_COMPLETE_ID:
                 {
-                    mWorkWithTasks.MarkAsDone(acmi.position);
-                    mWorkWithTasks.Sort();
+                    markTaskAsDone(acmi.position);
+                    sortTasks();
                     mListAdapter = new TaskArrayAdapter(this, mTasks);
-                    mListViewSimple.setAdapter( mListAdapter );
+                    mListView.setAdapter( mListAdapter );
                     mListAdapter.notifyDataSetChanged();
                 }
                 break;
@@ -200,24 +222,24 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.select_all_settings:
-                mWorkWithTasks.SelectAllTasks();
+                selectAllTasks();
                 break;
             case R.id.remove_all_settings:
-                mWorkWithTasks.UnselectAllTasks();
+                unselectedAllTasks();
                 break;
             case R.id.delete_all_settings:
-                mWorkWithTasks.DeleteAllTasks();
-                mWorkWithTasks.Sort();
+                deleteAllTasks();
+                sortTasks();
                 break;
             case R.id.as_complete:
                 for(int i = 0; i < mTasks.size(); ++i)
                 {
                     if (mTasks.get(i).isChecked())
                     {
-                        mWorkWithTasks.MarkAsDone(i);
+                        markTaskAsDone(i);
                     }
                 }
-                mWorkWithTasks.Sort();
+                sortTasks();
                 break;
         }
         mListAdapter.notifyDataSetChanged();
@@ -231,6 +253,83 @@ public class MainActivity extends AppCompatActivity {
         getIntent().putExtra(this.getString(R.string.rewrite), true);
         super.onDestroy();
     }
+
+    private void selectAllTasks()
+    {
+        changeSelectionTasks(true);
+    }
+
+    private void unselectedAllTasks()
+    {
+        changeSelectionTasks(false);
+    }
+
+    private void changeSelectionTasks(Boolean value)
+    {
+        for(int i = 0; i < mTasks.size(); ++i)
+        {
+            mTasks.get(i).setChecked(value);
+        }
+    }
+
+    private void deleteAllTasks()
+    {
+        int i = 0;
+        while(i < mTasks.size()) {
+            if (mTasks.get(i).isChecked()) {
+                mTasks.remove(i);
+            } else {
+                ++i;
+            }
+        }
+    }
+
+    private void markTaskAsDone(int index)
+    {
+        Task task = mTasks.get(index);
+        task.setComplete(true);
+        mTasks.set(index, task);
+    }
+
+    private void sortTasks()
+    {
+        ArrayList<Task> completeTasks = new ArrayList<Task>();
+        ArrayList<Task> uncompletedTasks = new ArrayList<Task>();
+        ArrayList<Task> importanceTasks = new ArrayList<Task>();
+        for(int i = 0; i < mTasks.size(); ++i)
+        {
+            Task currentTask = mTasks.get(i);
+            if(currentTask.getImportance() && !currentTask.getComplete())
+            {
+                importanceTasks.add(currentTask);
+            }
+            else if(currentTask.getComplete())
+            {
+                completeTasks.add(currentTask);
+            }
+            else
+            {
+                uncompletedTasks.add(currentTask);
+            }
+        }
+
+        Comparator<Task> compData = new Comparator<Task>(){
+            public int compare(Task lhs, Task rhs){
+                return lhs.getDate().compareTo(rhs.getDate());
+            }
+        };
+
+
+        Collections.sort(importanceTasks, compData);
+        Collections.sort(uncompletedTasks, compData);
+        Collections.sort(completeTasks, compData);
+
+        mTasks.clear();
+        mTasks.addAll(importanceTasks);
+        mTasks.addAll(uncompletedTasks);
+        mTasks.addAll(completeTasks);
+    }
+
 }
 
 

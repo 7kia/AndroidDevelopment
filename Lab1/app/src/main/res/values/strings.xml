@@ -5,7 +5,7 @@
     <string name="delimiter">◘</string>
     <string name="rewrite">rewrite</string>
     <string name="header">header</string>
-    <string name="isChange">isChange</string>
+    <string name="taskIsChanged">taskIsChanged</string>
     <string name="desc">desc</string>
     <string name="time">time</string>
     <string name="importance">importance</string>

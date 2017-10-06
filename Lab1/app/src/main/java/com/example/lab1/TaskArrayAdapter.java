@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class TaskArrayAdapter extends ArrayAdapter<Task> {
+class TaskArrayAdapter extends ArrayAdapter<Task> {
 
     private LayoutInflater mInflater;
 
@@ -78,7 +78,7 @@ public class TaskArrayAdapter extends ArrayAdapter<Task> {
         newCheckBox.setTag(task);
 
         isComplete.setChecked( task.isChecked() );
-        header.setText( task.getName() );
+        header.setText( task.getHeader() );
         date.setText(task.getDate());
         time.setText(task.getTime());
         if(task.getComplete())

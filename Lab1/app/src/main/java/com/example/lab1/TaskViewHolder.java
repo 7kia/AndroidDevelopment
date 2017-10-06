@@ -4,7 +4,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TaskViewHolder {
+class TaskViewHolder {
     private CheckBox mCheckBox;
     private TextView mHeader;
     private TextView mDate;

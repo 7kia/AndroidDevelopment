@@ -1,26 +1,23 @@
 package com.example.lab1;
 
-import java.sql.Date;
-import java.util.Comparator;
-
-public class Task {
-    private String mHeader = "" ;
-    private boolean mChecked = false ;
-    private boolean mIsComplete = false;
+class Task {
+    private String mHeader;
+    private boolean mChecked;
+    private boolean mIsComplete;
     private String mDate;
     private String mDescription;
     private String mTime;
     private boolean mImportance;
 
     public Task(
-            String name,
+            String header,
             String date,
             String time,
             String description,
             boolean isImportance,
             boolean isComplete
     ) {
-        this.mHeader = name;
+        this.mHeader = header;
         this.mImportance = isImportance;
         this.mDate = date;
         this.mTime = time;
@@ -28,7 +25,7 @@ public class Task {
         this.mIsComplete = isComplete;
     }
 
-    public String getName()
+    public String getHeader()
     {
         return mHeader;
     }
@@ -82,7 +79,7 @@ public class Task {
 
     public void toggleChecked()
     {
-        mChecked = !mChecked ;
+        mChecked = !mChecked;
     }
 
     public void setComplete(boolean complete)
@@ -94,8 +91,6 @@ public class Task {
     {
         return this.mIsComplete;
     }
-
-    public void toggleComplete() {this.mIsComplete = !this.mIsComplete;}
 
     public void setImportance(boolean complete)
     {

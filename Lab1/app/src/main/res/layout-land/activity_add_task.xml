@@ -59,16 +59,16 @@
                 android:background="@drawable/border"/>
 
             <EditText
-                android:layout_width="wrap_content"
+                android:id="@+id/time"
+                android:layout_width="250px"
                 android:layout_height="wrap_content"
-                android:inputType="time"
-                android:ems="10"
+                android:layout_above="@+id/imageView4"
+                android:layout_alignEnd="@+id/description"
                 android:layout_alignTop="@+id/spinner"
                 android:layout_marginLeft="19dp"
-                android:id="@+id/time"
                 android:background="@drawable/border"
-                android:layout_above="@+id/imageView4"
-                android:layout_alignEnd="@+id/description" />
+                android:ems="10"
+                android:inputType="time" />
 
             <Spinner
                 android:layout_width="300px"

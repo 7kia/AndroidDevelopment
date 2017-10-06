@@ -22,111 +22,104 @@
         android:textStyle="normal|bold"
         android:textSize="18sp" />
 
-    <TextView
-        android:text="Заголовок"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:id="@+id/textView4"
-        android:layout_marginLeft="17dp"
-        android:layout_marginStart="17dp"
-        android:layout_below="@+id/newTask"
-        android:layout_alignLeft="@+id/newTask"
-        android:layout_alignStart="@+id/newTask" />
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="250px"
+        android:layout_height="80px"
+        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/textView6"
+        android:background="@drawable/border"
+        android:textColor="#000fff" />
 
-    <EditText
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/headerText"
-        android:layout_marginTop="11dp"
-        android:layout_below="@+id/textView4"
         android:layout_alignLeft="@+id/newTask"
         android:layout_alignStart="@+id/newTask"
-        android:layout_alignRight="@+id/ready"
-        android:layout_alignEnd="@+id/ready"
-        android:background="@drawable/border"/>
-
-    <Spinner
-        android:layout_width="300px"
-        android:layout_height="80px"
-        android:id="@+id/spinner"
-        android:background="@drawable/border"
-        android:textColor="#000fff"
-        android:layout_marginTop="22dp"
-        android:layout_below="@+id/textView6"
-        android:layout_alignStart="@+id/radioImportance" />
+        android:layout_below="@+id/newTask"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="11dp"
+        android:text="Заголовок" />
 
     <EditText
+        android:id="@+id/headerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="time"
-        android:ems="10"
-        android:layout_marginLeft="19dp"
-        android:id="@+id/time"
         android:background="@drawable/border"
-        android:layout_alignTop="@+id/spinner"
-        android:layout_alignEnd="@+id/ready"
-        android:layout_toEndOf="@+id/description" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_below="@+id/textView4"
+        android:layout_alignStart="@+id/newTask" />
 
     <TextView
-        android:text="Описание"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/textView5"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/headerText"
-        android:layout_alignStart="@+id/textView4" />
-
-    <CheckBox
-        android:text="  Важность"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:id="@+id/radioImportance"
-        android:layout_below="@+id/time"
-        android:layout_alignStart="@+id/description" />
+        android:layout_alignStart="@+id/textView4"
+        android:text="Описание"
+        android:layout_below="@+id/headerText" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:background="@drawable/border"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_below="@+id/textView5"
+        android:layout_alignStart="@+id/headerText" />
 
     <Button
-        android:text="Готово"
+        android:id="@+id/ready"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ready"
-        android:onClick="onClick"
-        android:layout_marginEnd="21dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="35dp"
+        android:layout_marginEnd="21dp"
+        android:onClick="onClick"
+        android:text="Готово"
         android:textAlignment="center" />
 
-    <Button
-        android:text="Отменить"
+    <CheckBox
+        android:id="@+id/radioImportance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/time"
+        android:layout_marginTop="28dp"
+        android:text="  Важность"
+        android:visibility="visible" />
+
+    <Button
         android:id="@+id/cancel"
-        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/ready"
         android:layout_alignBottom="@+id/ready"
-        android:layout_alignStart="@+id/radioImportance" />
+        android:layout_alignStart="@+id/radioImportance"
+        android:onClick="onClick"
+        android:text="Отменить" />
 
     <TextView
-        android:text="Сроки"
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView6"
-        android:layout_below="@+id/textView5"
-        android:layout_alignStart="@+id/textView5"
-        android:layout_marginTop="105dp" />
+        android:text="Сроки"
+        android:layout_below="@+id/description"
+        android:layout_alignStart="@+id/textView5" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/description"
+        android:id="@+id/time"
+        android:layout_width="150px"
+        android:layout_height="80px"
+        android:layout_alignBottom="@+id/spinner"
+        android:layout_alignEnd="@+id/ready"
+        android:layout_marginLeft="19dp"
         android:background="@drawable/border"
-        android:layout_below="@+id/textView5"
-        android:layout_alignStart="@+id/headerText" />
+        android:ems="10"
+        android:inputType="time" />
 
 </RelativeLayout>

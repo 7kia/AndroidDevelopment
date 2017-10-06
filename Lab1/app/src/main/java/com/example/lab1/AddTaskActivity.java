@@ -20,7 +20,6 @@ import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class AddTaskActivity extends Activity implements View.OnClickListener {
@@ -55,7 +54,7 @@ public class AddTaskActivity extends Activity implements View.OnClickListener {
         String header = intent.getStringExtra(this.getString(R.string.header));
 
         mNumber = intent.getIntExtra(this.getString(R.string.number), -1);
-        mIsChange = intent.getBooleanExtra(this.getString(R.string.isChange), false);
+        mIsChange = intent.getBooleanExtra(this.getString(R.string.taskIsChanged), false);
         if (header != null)
         {
             String date = intent.getStringExtra(this.getString(R.string.date));
@@ -117,7 +116,7 @@ public class AddTaskActivity extends Activity implements View.OnClickListener {
                 newTask.putExtra(this.getString(R.string.date), mSpinnerValue);
                 newTask.putExtra(this.getString(R.string.time), mTime.getText().toString());
                 newTask.putExtra(this.getString(R.string.number), mNumber);
-                newTask.putExtra(this.getString(R.string.isChange), mIsChange);
+                newTask.putExtra(this.getString(R.string.taskIsChanged), mIsChange);
                 newTask.putExtra(this.getString(R.string.importance), mImportance.isChecked());
 
                 startActivity(newTask);
