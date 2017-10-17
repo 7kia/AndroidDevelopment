@@ -90,8 +90,10 @@ public class MainActivity extends AppCompatActivity {
                 photoFile = new ImageLoader().execute((Void) null).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                System.out.println("dispatchTakePictureIntent throw InterruptedException");
             } catch (ExecutionException e) {
                 e.printStackTrace();
+                System.out.println("dispatchTakePictureIntent throw ExecutionException");
             }
 
             if (photoFile != null) {
